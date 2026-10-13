@@ -1,0 +1,113 @@
+FCBQ STATS · APP DEL MÓVIL
+==========================
+
+Qué es
+------
+Una app para el móvil (se abre desde Chrome y se instala con su icono) que
+muestra las estadísticas que descarga el programa del PC.
+
+  PC (programa FCBQ Stats)  -->  Google Drive (tu cuenta)  -->  Móvil
+
+- El programa del PC no cambia: funciona y se ve igual que antes.
+- Cada vez que el PC hace una copia de seguridad, deja también el archivo
+  "fcbq_movil_datos.json" en la carpeta de copias.
+- Si esa carpeta está dentro de Google Drive, el móvil lo lee de ahí.
+- En GitHub solo se sube el programa de la app, nunca los datos. Los datos
+  de los niños se quedan en tu Drive privado y en tu móvil.
+
+La configuración se hace UNA sola vez. Son 4 pasos.
+
+
+PASO 1 · Google Drive en el PC
+------------------------------
+1. Instala "Google Drive para ordenadores" (drive.google.com/download) y
+   entra con tu cuenta de Gmail. Aparecerá una unidad nueva, normalmente
+   G:\Mi unidad
+2. Crea dentro una carpeta, por ejemplo:  G:\Mi unidad\FCBQ Stats
+3. Abre el programa FCBQ Stats > Ajustes > Copias de seguridad, pon esa
+   carpeta como carpeta de copias y pulsa "Hacer copia ahora".
+4. Comprueba en drive.google.com que aparece el archivo
+   "fcbq_movil_datos.json".
+
+
+PASO 2 · Subir la app a GitHub (gratis)
+---------------------------------------
+1. Entra en github.com con tu cuenta (ColeTrickle2025).
+2. Botón "+" (arriba a la derecha) > "New repository".
+   - Nombre: fcbq-movil
+   - Marca "Public" (para usar la web gratis; solo contiene el programa,
+     no los datos).
+   - Pulsa "Create repository".
+3. En la página nueva, pulsa "uploading an existing file". Arrastra TODOS
+   los archivos de esta carpeta (index.html, app.js, app.css, sw.js,
+   manifest.webmanifest, chart.umd.js y los 3 iconos .png).
+   Pulsa "Commit changes".
+4. Ve a Settings > Pages. En "Branch" elige "main" y "/ (root)" y pulsa
+   "Save".
+5. Espera 1 o 2 minutos. Tu app estará en:
+       https://coletrickle2025.github.io/fcbq-movil/
+
+
+PASO 3 · Permiso de Google para leer tu Drive
+---------------------------------------------
+Esto le da a TU app permiso para leer TU Drive (solo leer, nunca borrar).
+
+1. Entra en console.cloud.google.com con tu Gmail.
+2. Arriba, en el selector de proyectos > "Proyecto nuevo".
+   Nombre: FCBQ Movil > "Crear". Asegúrate de tenerlo seleccionado.
+3. Menú > "APIs y servicios" > "Biblioteca". Busca "Google Drive API",
+   entra y pulsa "Habilitar".
+4. Menú > "Google Auth Platform" (o "Pantalla de consentimiento OAuth")
+   > "Comenzar":
+   - Nombre de la app: FCBQ Movil. Correo: el tuyo.
+   - Público / Audiencia: "Externo".
+   - Datos de contacto: tu correo. Acepta y "Crear".
+5. En "Público" (Audience) > "Usuarios de prueba" > "Añadir usuarios":
+   pon tu propio Gmail y guarda.
+   (La app se queda en modo "Prueba". Es lo correcto: solo la usas tú.)
+6. En "Clientes" > "Crear cliente":
+   - Tipo de aplicación: "Aplicación web". Nombre: FCBQ Movil.
+   - "Orígenes de JavaScript autorizados" > "Añadir URI":
+         https://coletrickle2025.github.io
+     (Así, sin barra al final y sin /fcbq-movil.)
+   - Pulsa "Crear".
+7. Copia el "ID de cliente". Es algo como:
+       1234567890-abcdefg.apps.googleusercontent.com
+
+
+PASO 4 · En el móvil
+--------------------
+1. Abre Chrome y ve a https://coletrickle2025.github.io/fcbq-movil/
+2. Toca "Ir a configurarlo", pega el ID de cliente y pulsa "Guardar".
+3. Toca "Actualizar desde Google Drive" y entra con tu Gmail.
+   Google avisará de que "la app no está verificada": es normal, porque
+   es tu propia app. Toca "Continuar" y acepta el permiso de "ver tus
+   archivos de Google Drive".
+4. Instala el icono: menú ⋮ de Chrome > "Añadir a pantalla de inicio"
+   (o "Instalar aplicación").
+
+
+Uso diario
+----------
+- En el PC, descarga los partidos como siempre. Después de cada descarga
+  con partidos nuevos se hace la copia y se actualiza el archivo del
+  móvil. Google Drive lo sube solo en unos segundos.
+- En el móvil, abre la app y toca "Buscar datos nuevos en Drive" (abajo
+  del todo en Inicio) o "Actualizar" en Más.
+- Sin internet, la app sigue funcionando con los últimos datos que
+  descargó.
+
+
+Si algo falla
+-------------
+- "No encuentro fcbq_movil_datos.json en tu Drive":
+  la carpeta de copias del PC no está dentro de Google Drive, o aún no se
+  ha subido. Mira el PASO 1.
+- Error al entrar con Google ("redirect_uri_mismatch", "origin" o
+  "invalid_client"): revisa el PASO 3, punto 6. El origen debe ser
+  exactamente https://coletrickle2025.github.io
+- "Access blocked" o "acceso denegado": falta añadir tu Gmail como
+  usuario de prueba (PASO 3, punto 5).
+- Plan B sin Google: en la app, en Más, usa "Abrir archivo de datos a
+  mano" y elige el archivo fcbq_movil_datos.json (por ejemplo, desde la
+  app de Drive o enviado por WhatsApp a ti mismo).
