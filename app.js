@@ -162,9 +162,9 @@ routes.welcome = () => {
   const hasId = !!clientId();
   view.innerHTML = `<div class="welcome">${ballArt}<h2>Tus estadísticas, en el móvil</h2>
     <p>La app lee los partidos que tu PC guarda en Google Drive. Solo tienes que entrar con tu cuenta de Google.</p>
-    ${hasId ? `<button class="btn pri" id="go">${I.google} Entrar con Google y cargar</button>`
-      : `<div class="info warn">${I.alert}<div>Primero hay que poner el <b>ID de cliente de Google</b> (solo una vez).</div></div><div style="height:10px"></div><a class="btn pri" href="#/mas">Ir a configurarlo</a>`}
-    <div style="height:10px"></div><button class="btn" id="pick">${I.file} Abrir el archivo de datos a mano</button></div>`;
+    ${hasId ? `<button class="btn pri" id="go">${I.google} Entrar con Google y cargar</button><div style="height:10px"></div><button class="btn" id="pick">${I.file} Abrir el archivo de datos a mano</button>`
+      : `<button class="btn pri" id="pick">${I.file} Abrir mis datos</button>
+         <p class="muted" style="font-size:13px;margin-top:12px">Toca el botón, elige <b>Drive</b> en el menú de la izquierda y abre <b>${DATA_FILE}</b> (en tu carpeta de copias).</p>`}</div>`;
   const go = $("#go"); if (go) go.onclick = e => doRefresh(e.currentTarget, true);
   $("#pick").onclick = () => $("#filepick").click();
 };
@@ -218,9 +218,11 @@ routes.inicio = () => {
   }
   if (!fol.length && d.recent.length) html += `<div class="sec">Últimos partidos</div>` + d.recent.map(matchCard).join("");
   html += `<p class="muted" style="text-align:center;font-size:12px;margin-top:16px">Datos del ${esc(S.data.generated)}</p>`;
-  if (clientId()) html += `<button class="btn" id="upd-home">${I.refresh} Buscar datos nuevos en Drive</button>`;
+  html += clientId() ? `<button class="btn" id="upd-home">${I.refresh} Buscar datos nuevos en Drive</button>`
+    : `<button class="btn" id="pick-home">${I.file} Cargar datos nuevos</button>`;
   view.innerHTML = html;
   const uh = $("#upd-home"); if (uh) uh.onclick = e => doRefresh(e.currentTarget, true);
+  const ph = $("#pick-home"); if (ph) ph.onclick = () => $("#filepick").click();
 };
 function scoreRows(m, dark) {
   const lw = m.local_score > m.visitor_score, vw = m.visitor_score > m.local_score;
@@ -465,11 +467,11 @@ routes.mas = () => {
   const id = clientId();
   view.innerHTML = `
     ${S.data ? `<div class="info ok">${I.check}<div>Datos del <b>${esc(S.data.generated)}</b>${S.driveTime ? " · desde Google Drive" : " · cargados a mano"}</div></div><div style="height:10px"></div>` : ""}
-    <button class="btn pri" id="upd" ${id ? "" : "disabled"}>${I.refresh} Actualizar desde Google Drive</button>
-    <div style="height:8px"></div><button class="btn" id="pick">${I.file} Abrir archivo de datos a mano</button>
+    ${id ? `<button class="btn pri" id="upd">${I.refresh} Actualizar desde Google Drive</button><div style="height:8px"></div><button class="btn" id="pick">${I.file} Abrir archivo de datos a mano</button>`
+      : `<button class="btn pri" id="pick">${I.file} Cargar datos nuevos</button><p class="muted" style="font-size:13px;margin:8px 4px 0">Elige <b>Drive</b> y abre <b>${DATA_FILE}</b>.</p>`}
     <div class="sec">Instalar en el móvil</div>
     <div class="card"><div class="card-b" style="padding-top:12px;font-size:14px;line-height:1.5">En Chrome, toca el menú <b>⋮</b> y luego <b>"Añadir a pantalla de inicio"</b> o <b>"Instalar aplicación"</b>. Tendrás el icono como cualquier app y funcionará también sin internet con los últimos datos descargados.</div></div>
-    <div class="sec">Conexión con Google</div>
+    <div class="sec">Conexión automática con Google (opcional)</div>
     <div class="card"><div class="card-b" style="padding-top:12px">
       <div style="font-size:13px;color:var(--muted);margin-bottom:8px">ID de cliente de Google (se pone una sola vez; lo da la consola de Google al configurarlo)</div>
       <input class="input" id="cid" placeholder="xxxxxxxx.apps.googleusercontent.com" value="${esc(id)}" autocomplete="off" spellcheck="false">
@@ -477,7 +479,7 @@ routes.mas = () => {
       ${lsGet("fcbq_logged") ? `<div style="height:8px"></div><button class="btn" id="logout">Cerrar sesión de Google</button>` : ""}
     </div></div>
     <p class="muted" style="font-size:12px;text-align:center;margin-top:14px">FCBQ Stats móvil · solo lectura · los datos se quedan en tu Drive y en este móvil</p>`;
-  $("#upd").onclick = e => doRefresh(e.currentTarget, true);
+  if ($("#upd")) $("#upd").onclick = e => doRefresh(e.currentTarget, true);
   $("#pick").onclick = () => $("#filepick").click();
   $("#savecid").onclick = () => {
     const v = $("#cid").value.trim();
